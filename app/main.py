@@ -1,11 +1,9 @@
 from fastapi import FastAPI
+from app.api.routes.health import router
 
 app = FastAPI(
     title="Smart Healthcare Diagnostic Platform",
-    description="AI-powered healthcare risk and diagnostic system",
     version="1.0.0"
 )
 
-@app.get("/health")
-def health_check():
-    return {"status": "Backend is running successfully"}
+app.include_router(router)
