@@ -1,6 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from app.core.logs import logger
+
 from schemas.patient import DiabetesInput
-from services.prediction_service import predict_diabetes
+from schemas.heart import HeartInput
+
+from services.diabetes_prediction_service import predict_diabetes
+from services.heart_prediction_service import predict_heart_disease
 
 router = APIRouter(
     prefix="",
@@ -9,8 +14,29 @@ router = APIRouter(
 
 @router.get("/health")
 def health_check():
+    logger.info("Health check endpoint accessed")
     return {"status": "Backend is running successfully"}
 
 @router.post("/predict/diabetes")
 def diabetes_prediction(data: DiabetesInput):
-    return predict_diabetes(data)
+    try:
+        logger.info("Diabetes prediction request received")
+        return predict_diabetes(data)
+    except Exception as e:
+        logger.error(f"Diabetes prediction failed: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Diabetes prediction failed"
+        )
+
+@router.post("/predict/heart")
+def heart_prediction(data: HeartInput):
+    try:
+        logger.info("Heart disease prediction request received")
+        return predict_heart_disease(data)
+    except Exception as e:
+        logger.error(f"Heart disease prediction failed: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Heart disease prediction failed"
+        )

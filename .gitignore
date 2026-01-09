@@ -1,0 +1,20 @@
+mode.pkl
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+
+# ML artifacts
+models/**/*.pkl
+mlruns/
+
+# OS
+.DS_Store
+Thumbs.db
+
+data
