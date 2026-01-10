@@ -1,3 +1,67 @@
 2026-01-09 12:46:53,289 | INFO | SmartHealthcare | Heart disease prediction request received
 2026-01-09 12:46:53,291 | INFO | SmartHealthcare | Heart disease prediction request received
 2026-01-09 12:46:53,302 | INFO | SmartHealthcare | Heart disease prediction successful | Probability=0.11
+2026-01-09 14:14:45,041 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+2026-01-09 14:14:46,007 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\backend.py:1398: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2026-01-09 14:14:46,366 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\layers\normalization\batch_normalization.py:979: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.
+
+2026-01-09 14:15:31,096 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+2026-01-09 14:15:31,978 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\backend.py:1398: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2026-01-09 14:15:32,368 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\layers\normalization\batch_normalization.py:979: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.
+
+2026-01-09 14:15:33,534 | ERROR | fastapi | Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2026-01-09 14:15:51,039 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+2026-01-09 14:15:51,982 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\backend.py:1398: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2026-01-09 14:15:52,329 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\layers\normalization\batch_normalization.py:979: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.
+
+2026-01-09 14:15:53,642 | ERROR | fastapi | Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2026-01-09 14:16:56,401 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+2026-01-09 14:16:57,270 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\backend.py:1398: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2026-01-09 14:16:57,581 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\layers\normalization\batch_normalization.py:979: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.
+
+2026-01-09 14:17:15,674 | INFO | SmartHealthcare | Blood compatibility request received
+2026-01-09 14:17:15,674 | INFO | SmartHealthcare | Checking blood compatibility for 0+
+2026-01-09 14:17:15,674 | ERROR | SmartHealthcare | Invalid blood group: 0+
+2026-01-09 14:17:24,271 | INFO | SmartHealthcare | Blood compatibility request received
+2026-01-09 14:17:24,273 | INFO | SmartHealthcare | Checking blood compatibility for 0+
+2026-01-09 14:17:24,273 | ERROR | SmartHealthcare | Invalid blood group: 0+
+2026-01-09 14:18:24,870 | INFO | SmartHealthcare | Blood compatibility request received
+2026-01-09 14:18:24,870 | INFO | SmartHealthcare | Checking blood compatibility for 0+
+2026-01-09 14:18:24,870 | ERROR | SmartHealthcare | Invalid blood group: 0+
+2026-01-09 14:18:26,962 | INFO | SmartHealthcare | Blood compatibility request received
+2026-01-09 14:18:26,962 | INFO | SmartHealthcare | Checking blood compatibility for 0+
+2026-01-09 14:18:26,962 | ERROR | SmartHealthcare | Invalid blood group: 0+
+2026-01-09 14:18:54,420 | INFO | SmartHealthcare | Blood compatibility request received
+2026-01-09 14:18:54,422 | INFO | SmartHealthcare | Checking blood compatibility for o+
+2026-01-10 14:20:02,508 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+2026-01-10 14:20:03,703 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\backend.py:1398: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2026-01-10 14:20:04,083 | WARNING | tensorflow | From C:\Users\shuba\anaconda3\envs\smarthealth\lib\site-packages\keras\src\layers\pooling\max_pooling2d.py:161: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+
+2026-01-10 14:20:33,045 | INFO | SmartHealthcare | X-ray prediction request received
+2026-01-10 14:20:35,185 | INFO | SmartHealthcare | X-ray prediction: PNEUMONIA | Confidence: 0.9890801310539246
+2026-01-10 14:20:51,230 | INFO | SmartHealthcare | X-ray prediction request received
+2026-01-10 14:20:51,411 | INFO | SmartHealthcare | X-ray prediction: PNEUMONIA | Confidence: 0.9009217023849487
+2026-01-10 14:21:09,945 | INFO | SmartHealthcare | X-ray prediction request received
+2026-01-10 14:21:10,180 | INFO | SmartHealthcare | X-ray prediction: COVID | Confidence: 0.5318769812583923
+2026-01-10 14:21:39,381 | INFO | SmartHealthcare | X-ray prediction request received
+2026-01-10 14:21:39,574 | INFO | SmartHealthcare | X-ray prediction: NORMAL | Confidence: 0.7025137543678284
+2026-01-10 14:22:02,751 | INFO | SmartHealthcare | X-ray prediction request received
+2026-01-10 14:22:03,030 | INFO | SmartHealthcare | X-ray prediction: PNEUMONIA | Confidence: 0.6506534814834595

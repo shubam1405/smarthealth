@@ -7,6 +7,12 @@ from schemas.heart import HeartInput
 from services.diabetes_prediction_service import predict_diabetes
 from services.heart_prediction_service import predict_heart_disease
 
+from fastapi import UploadFile, File
+from PIL import Image
+from models.xray.prediction_service import predict_xray
+import io
+
+
 router = APIRouter(
     prefix="",
     tags=["Health & Prediction"]
@@ -40,3 +46,10 @@ def heart_prediction(data: HeartInput):
             status_code=500,
             detail="Heart disease prediction failed"
         )
+@router.post("/predict/xray")
+async def xray_prediction(file: UploadFile = File(...)):
+    try:
+        image = Image.open(io.BytesIO(await file.read())).convert("RGB")
+        return predict_xray(image)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid image file")
