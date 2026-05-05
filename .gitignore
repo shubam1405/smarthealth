@@ -18,3 +18,8 @@ mlruns/
 Thumbs.db
 
 data
+__pycache__/
+*.pyc
+.env
+*.db
+logs/
