@@ -4,16 +4,16 @@ import PrivateRoute from './components/PrivateRoute'
 import Sidebar from './components/Sidebar'
 import ChatbotWidget from './components/ChatbotWidget'
 
-// Pages
 import Login from './pages/Login'
 import Register from './pages/Register'
 import PatientDashboard from './pages/PatientDashboard'
 import DoctorDashboard from './pages/DoctorDashboard'
+import PatientProfilePage from './pages/PatientProfilePage'
+import AdminPanel from './pages/AdminPanel'
 import DiabetesPrediction from './pages/DiabetesPrediction'
 import HeartPrediction from './pages/HeartPrediction'
 import XrayPrediction from './pages/XrayPrediction'
 
-// Layout with sidebar + chatbot
 function AppLayout({ children }) {
   return (
     <div className="layout">
@@ -26,6 +26,7 @@ function AppLayout({ children }) {
 
 function AppRoutes() {
   const { user } = useAuth()
+  const isDoctor = user?.role === 'doctor' || user?.role === 'admin'
 
   return (
     <Routes>
@@ -35,12 +36,11 @@ function AppRoutes() {
 
       {/* Root redirect */}
       <Route path="/" element={
-        user
-          ? <Navigate to={user.role === 'doctor' || user.role === 'admin' ? '/doctor' : '/patient'} replace />
-          : <Navigate to="/login" replace />
+        user ? <Navigate to={isDoctor ? '/doctor' : '/patient'} replace />
+             : <Navigate to="/login" replace />
       } />
 
-      {/* Patient routes */}
+      {/* ── Patient routes ── */}
       <Route path="/patient" element={
         <PrivateRoute roles={['patient']}>
           <AppLayout><PatientDashboard /></AppLayout>
@@ -62,7 +62,7 @@ function AppRoutes() {
         </PrivateRoute>
       } />
 
-      {/* Doctor routes */}
+      {/* ── Doctor routes ── */}
       <Route path="/doctor" element={
         <PrivateRoute roles={['doctor', 'admin']}>
           <AppLayout><DoctorDashboard /></AppLayout>
@@ -71,6 +71,12 @@ function AppRoutes() {
       <Route path="/doctor/patients" element={
         <PrivateRoute roles={['doctor', 'admin']}>
           <AppLayout><DoctorDashboard /></AppLayout>
+        </PrivateRoute>
+      } />
+      {/* Full patient profile — doctor clicks from dashboard */}
+      <Route path="/doctor/patients/:patientId" element={
+        <PrivateRoute roles={['doctor', 'admin']}>
+          <AppLayout><PatientProfilePage /></AppLayout>
         </PrivateRoute>
       } />
       <Route path="/doctor/predict/diabetes" element={
@@ -89,7 +95,13 @@ function AppRoutes() {
         </PrivateRoute>
       } />
 
-      {/* Catch all */}
+      {/* ── Admin routes ── */}
+      <Route path="/admin" element={
+        <PrivateRoute roles={['admin']}>
+          <AppLayout><AdminPanel /></AppLayout>
+        </PrivateRoute>
+      } />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

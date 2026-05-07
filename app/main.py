@@ -5,11 +5,11 @@ from app.core.config import settings
 from app.core.logs import logger
 from app.database.database import create_tables
 
-# Routers
 from app.api.routes.health import router as health_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.patients import router as patients_router
 from app.api.routes.chatbot_route import router as chatbot_router
+from app.api.routes.admin import router as admin_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -37,6 +37,7 @@ app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(patients_router)
 app.include_router(chatbot_router)
+app.include_router(admin_router)
 
 @app.get("/", tags=["Root"])
 def root():

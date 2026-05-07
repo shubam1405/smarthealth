@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -14,12 +15,11 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> User:
-    """Extract and validate the current user from JWT token."""
     payload = decode_access_token(token)
     if not payload:
         raise CredentialsException()
 
-    user_id: int = payload.get("sub")
+    user_id = payload.get("sub")
     if user_id is None:
         raise CredentialsException()
 
@@ -31,19 +31,16 @@ def get_current_user(
 
 
 def get_current_doctor(current_user: User = Depends(get_current_user)) -> User:
-    """Allow only doctors."""
     if current_user.role not in (UserRole.doctor, UserRole.admin):
         raise ForbiddenException("Only doctors can perform this action")
     return current_user
 
 
 def get_current_admin(current_user: User = Depends(get_current_user)) -> User:
-    """Allow only admins."""
     if current_user.role != UserRole.admin:
         raise ForbiddenException("Only admins can perform this action")
     return current_user
 
 
 def get_doctor_or_patient(current_user: User = Depends(get_current_user)) -> User:
-    """Allow any authenticated user."""
     return current_user

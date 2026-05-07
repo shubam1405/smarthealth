@@ -1,8 +1,11 @@
+from typing import Optional
 import google.generativeai as genai
 from app.core.config import settings
 from app.core.logs import logger
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
+
+GEMINI_MODEL = "gemini-2.0-flash"
 
 SYSTEM_PROMPT = """You are MediBot, a knowledgeable and compassionate AI medical assistant integrated into the MediSense Smart Healthcare Platform.
 
@@ -22,81 +25,49 @@ Rules you must strictly follow:
 
 You are not a replacement for professional medical care. Always make this clear when relevant."""
 
-# Try these models in order until one works
-MODEL_PRIORITY = [
-    "gemini-1.5-flash-8b",   # lightest quota usage
-    "gemini-1.5-flash",
-    "gemini-2.0-flash",
-]
+
+def _build_prompt(message: str, history: list, patient_context: Optional[dict]) -> str:
+    parts = [SYSTEM_PROMPT, ""]
+
+    if patient_context:
+        ctx_parts = []
+        if patient_context.get("full_name"):         ctx_parts.append(f"Patient: {patient_context['full_name']}")
+        if patient_context.get("gender"):             ctx_parts.append(f"Gender: {patient_context['gender']}")
+        if patient_context.get("blood_group"):        ctx_parts.append(f"Blood group: {patient_context['blood_group']}")
+        if patient_context.get("allergies"):          ctx_parts.append(f"Known allergies: {patient_context['allergies']}")
+        if patient_context.get("active_medications"): ctx_parts.append(f"Current medications: {patient_context['active_medications']}")
+        if ctx_parts:
+            parts.append("[PATIENT CONTEXT]")
+            parts.append(", ".join(ctx_parts))
+            parts.append("")
+
+    if history:
+        parts.append("[CONVERSATION HISTORY]")
+        for msg in history:
+            role = "Patient/Doctor" if msg["role"] == "user" else "MediBot"
+            parts.append(f"{role}: {msg['content']}")
+        parts.append("")
+
+    parts.append("[CURRENT MESSAGE]")
+    parts.append(f"Patient/Doctor: {message}")
+    parts.append("")
+    parts.append("MediBot:")
+
+    return "\n".join(parts)
 
 
-def build_gemini_history(history: list[dict]) -> list[dict]:
-    """
-    Convert our message format to Gemini's format.
-    IMPORTANT: Gemini uses 'model' not 'assistant' for bot turns.
-    Also ensures history alternates user/model correctly.
-    """
-    gemini_history = []
-    for msg in history:
-        # Map 'assistant' → 'model' which is what Gemini expects
-        role = "user" if msg["role"] == "user" else "model"
-        gemini_history.append({
-            "role": role,
-            "parts": [{"text": msg["content"]}]
-        })
-    return gemini_history
-
-
-def chat_with_gemini(
+async def chat_with_medibot(
     message: str,
-    history: list[dict],
-    patient_context: dict | None = None,
+    history: list,
+    patient_context: Optional[dict] = None,
 ) -> str:
-    """
-    Send a message to Gemini. Tries multiple models in priority order.
-    history should NOT include the current message — we send it via chat.send_message().
-    """
-    # Build patient context prefix (only inject on first message)
-    context_prefix = ""
-    if patient_context and len(history) <= 1:
-        parts = []
-        if patient_context.get("full_name"):         parts.append(f"Patient: {patient_context['full_name']}")
-        if patient_context.get("gender"):             parts.append(f"Gender: {patient_context['gender']}")
-        if patient_context.get("blood_group"):        parts.append(f"Blood group: {patient_context['blood_group']}")
-        if patient_context.get("allergies"):          parts.append(f"Known allergies: {patient_context['allergies']}")
-        if patient_context.get("active_medications"): parts.append(f"Current medications: {patient_context['active_medications']}")
-        if parts:
-            context_prefix = f"[Patient context — {', '.join(parts)}]\n\n"
-
-    # history passed here is everything EXCEPT the current message
-    gemini_history = build_gemini_history(history)
-    full_message = context_prefix + message if context_prefix else message
-
-    last_error = None
-    for model_name in MODEL_PRIORITY:
-        try:
-            model = genai.GenerativeModel(
-                model_name=model_name,
-                system_instruction=SYSTEM_PROMPT
-            )
-            chat = model.start_chat(history=gemini_history)
-            response = chat.send_message(full_message)
-            logger.info(f"Gemini responded | model={model_name} | history_len={len(history)}")
-            return response.text
-
-        except Exception as e:
-            err_str = str(e)
-            is_quota = "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower()
-            is_unavailable = "404" in err_str or "not found" in err_str.lower()
-
-            if is_quota or is_unavailable:
-                logger.warning(f"Model {model_name} skipped: {'quota' if is_quota else 'not found'}")
-                last_error = e
-                continue
-
-            # Any other error (auth, malformed request, etc.) — log and raise immediately
-            logger.error(f"Gemini error on {model_name}: {err_str}")
-            raise
-
-    logger.error(f"All Gemini models exhausted. Last error: {last_error}")
-    raise last_error
+    prompt = _build_prompt(message, history, patient_context)
+    try:
+        model = genai.GenerativeModel(GEMINI_MODEL)
+        response = await model.generate_content_async(prompt)
+        reply = response.text.strip()
+        logger.info(f"MediBot responded | model={GEMINI_MODEL} | history_len={len(history)}")
+        return reply
+    except Exception as e:
+        logger.error(f"MediBot error: {str(e)}")
+        raise

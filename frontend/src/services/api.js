@@ -47,4 +47,13 @@ export const predictXray = (formData, patientId) =>
 export const sendChatMessage = (message, history) =>
   api.post('/chatbot/chat', { message, history, include_patient_context: true })
 
+// Admin
+export const listAllUsers = () => api.get('/admin/users')
+export const updateUserStatus = (userId, isActive) =>
+  api.patch(`/admin/users/${userId}/status`, { is_active: isActive })
+
+// Full patient profile (doctor view)
+export const getFullPatientProfile = (patientId) =>
+  api.get(`/admin/patients/${patientId}/full`)
+
 export default api

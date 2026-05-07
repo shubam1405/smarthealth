@@ -1,3 +1,4 @@
+from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -6,7 +7,7 @@ from app.auth.dependencies import get_current_user
 from app.core.logs import logger
 from app.database.database import get_db
 from app.database.models import User, Patient, Medication, UserRole
-from services.chatbot_service import chat_with_gemini
+from services.chatbot_service import chat_with_medibot
 
 router = APIRouter(prefix="/chatbot", tags=["Medical Chatbot"])
 
@@ -18,7 +19,7 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    history: list[Message] = []   # previous messages ONLY, not including current message
+    history: List[Message] = []
     include_patient_context: bool = True
 
 
@@ -27,7 +28,7 @@ class ChatResponse(BaseModel):
     role: str = "assistant"
 
 
-def _get_patient_context(user: User, db: Session) -> dict | None:
+def _get_patient_context(user: User, db: Session) -> Optional[dict]:
     if user.role != UserRole.patient:
         return None
     patient = db.query(Patient).filter(Patient.user_id == user.id).first()
@@ -47,7 +48,7 @@ def _get_patient_context(user: User, db: Session) -> dict | None:
 
 
 @router.post("/chat", response_model=ChatResponse)
-def chat(
+async def chat(
     body: ChatRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -57,12 +58,10 @@ def chat(
         if body.include_patient_context:
             patient_context = _get_patient_context(current_user, db)
 
-        # history = previous turns only (NOT including current message)
         history = [{"role": m.role, "content": m.content} for m in body.history]
+        logger.info(f"Chatbot | user={current_user.id} | history={len(history)} | msg={body.message[:60]}")
 
-        logger.info(f"Chatbot request | user={current_user.id} | history_len={len(history)} | msg={body.message[:50]}")
-
-        reply = chat_with_gemini(
+        reply = await chat_with_medibot(
             message=body.message,
             history=history,
             patient_context=patient_context
@@ -71,10 +70,8 @@ def chat(
 
     except Exception as e:
         err_str = str(e)
-        logger.error(f"Chatbot route error: {err_str}")
-
+        logger.error(f"Chatbot error: {err_str}")
         is_quota = "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower()
         if is_quota:
             raise HTTPException(status_code=429, detail="rate_limit")
-
         raise HTTPException(status_code=503, detail="unavailable")

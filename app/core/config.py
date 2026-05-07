@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # JWT
     JWT_SECRET_KEY: str = "super-secret-healthcare-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
 
     # Database
     DATABASE_URL: str = "sqlite:///./healthcare.db"
